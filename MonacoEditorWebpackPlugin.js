@@ -30,7 +30,7 @@ function resolveMonacoPath(filePath) {
  */
 function getWorkerFilename(filename, entry) {
     return loaderUtils.interpolateName({ resourcePath: entry }, filename, {
-        content: fs.readFileSync(resolveMonacoPath(entry))
+        content: fs.readFileSync(entry)
     });
 }
 function getFeaturesIds(userFeatures) {
@@ -61,19 +61,19 @@ class MonacoEditorWebpackPlugin {
             features: coalesce(features.map(id => featuresById[id])),
             filename: options.filename || "[name].worker.js",
             publicPath: options.publicPath || '',
+            workers: options.workers || [],
         };
     }
     apply(compiler) {
-        const { languages, features, filename, publicPath } = this.options;
+        const { languages, features, filename, publicPath, workers } = this.options;
         const compilationPublicPath = getCompilationPublicPath(compiler);
         const modules = [EDITOR_MODULE].concat(languages).concat(features);
-        const workers = [];
         modules.forEach((module) => {
             if (module.worker) {
                 workers.push({
                     label: module.label,
                     id: module.worker.id,
-                    entry: module.worker.entry
+                    entry: resolveMonacoPath(module.worker.entry)
                 });
             }
         });
@@ -171,7 +171,7 @@ function createPlugins(workers, filename) {
     return ([]
         .concat(workers.map(({ id, entry }) => new AddWorkerEntryPointPlugin_1.AddWorkerEntryPointPlugin({
         id,
-        entry: resolveMonacoPath(entry),
+        entry,
         filename: getWorkerFilename(filename, entry),
         plugins: [
             new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),

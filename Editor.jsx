@@ -10,7 +10,7 @@ const SCHEMA_URL = 'https://api.spacex.land/graphql/';
 
 window.MonacoEnvironment.getWorkerUrl = (moduleId, label) => {
   if (label === 'json') return '/_next/static/json.worker.js'
-  if (label === 'graphqlDev') return '/_next/static/monaco-graphql.worker.js'
+  if (label === 'graphqlDev') return '/_next/static/graphql.worker.js'
   return '/_next/static/editor.worker.js'
 }
 
