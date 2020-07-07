@@ -1,26 +1,16 @@
-export default `class Animal {
-    constructor(public name: string) { }
-    move(meters: number) {
-        console.log(this.name + " moved " + meters + "m.");
+export default `
+query Example($limit: Int) {
+  launchesPast(limit: $limit) {
+    mission_name
+    # format me using the right click context menu
+              launch_date_local
+    launch_site {
+      site_name_long
     }
-}
-
-class Snake extends Animal {
-    move() {
-        console.log("Slithering...");
-        super.move(5);
+    links {
+      article_link
+      video_link
     }
+  }
 }
-
-class Horse extends Animal {
-    move() {
-        console.log("Galloping...");
-        super.move(45);
-    }
-}
-
-var sam = new Snake("Sammy the Python")
-var tom: Animal = new Horse("Tommy the Palomino")
-
-sam.move()
-tom.move(34)`
+`
