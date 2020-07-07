@@ -13,16 +13,6 @@ module.exports = withCSS({
       },
     })
 
-    // config.module.rules.push({
-    //   // test: /^worker-loader\!/,
-    //   loader: 'worker-loader',
-    //   // options: { inline: true }, // also works
-    //   options: {
-    //     name: 'static/[name].worker.js',
-    //     publicPath: '/_next/',
-    //   },
-    // });
-
     config.plugins.push(
       new MonacoWebpackPlugin({
         // Add languages as needed...
