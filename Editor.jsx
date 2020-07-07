@@ -1,14 +1,16 @@
-import dynamic from 'next/dynamic'
+import MonacoEditor from 'react-monaco-editor';
 
-import sample from '../code-sample'
+import 'monaco-graphql/esm/monaco.contribution';
 
-const MonacoEditor = dynamic(import('react-monaco-editor'), { ssr: false })
+import sample from './code-sample'
 
-function GraphqlPage() {
-  if (typeof window !== 'undefined') {
-    require('monaco-graphql/esm/monaco.contribution');
-  }
+window.MonacoEnvironment.getWorkerUrl = (moduleId, label) => {
+  if (label === 'json') return '/_next/static/json.worker.js'
+  if (label === 'graphqlDev') return '/_next/static/monaco-graphql.worker.js'
+  return '/_next/static/editor.worker.js'
+}
 
+export default function Editor() {
   return (
     <MonacoEditor
       height={'600px'}
@@ -26,5 +28,3 @@ function GraphqlPage() {
     />
   )
 }
-
-export default GraphqlPage
