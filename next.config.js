@@ -33,7 +33,9 @@ module.exports = withCSS({
 
     config.output.globalObject = 'this';
 
-    config.entry = config.entry().then((entry) => {
+    // weird that there's a 'main.js': [] entry here...
+    // this fails `npm run build`
+    config.entry = config.entry().then(({ ['main.js']: main, ...entry }) => {
       return {
         ...entry,
         'static/monaco-graphql.worker.js': 'monaco-graphql/esm/graphql.worker.js',
