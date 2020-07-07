@@ -1,4 +1,6 @@
-# Example app with Monaco Editor
+# Example app with Monaco Editor + Monaco GraphQL
+
+Everything below is copied from https://github.com/vercel/next.js/tree/master/examples/with-monaco-editor
 
 This example adds support for [Monaco Editor](https://github.com/Microsoft/monaco-editor) integration using the
 [`react-monaco-editor`](https://github.com/react-monaco-editor/react-monaco-editor) library.
