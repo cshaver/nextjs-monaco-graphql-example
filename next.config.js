@@ -1,6 +1,5 @@
 const withCSS = require('@zeit/next-css')
-const MonacoWebpackPlugin = require('./MonacoEditorWebpackPlugin')
-// const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin')
 
 module.exports = withCSS({
   webpack: (config, { isServer }) => {
