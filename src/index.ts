@@ -40,7 +40,7 @@ function resolveMonacoPath(filePath: string): string {
  */
 function getWorkerFilename(filename: string, entry: string): string {
   return loaderUtils.interpolateName(<any>{ resourcePath: entry }, filename, {
-    content: fs.readFileSync(resolveMonacoPath(entry))
+    content: fs.readFileSync(entry)
   });
 }
 
@@ -90,6 +90,11 @@ interface IMonacoEditorWebpackPluginOpts {
    * Use e.g. '/' if you want to load your resources from the current origin.
    */
   publicPath?: string;
+
+  /**
+   * Pass additional worker paths for which to add entry points.
+   */
+  workers?: ILabeledWorkerDefinition[];
 }
 
 interface IInternalMonacoEditorWebpackPluginOpts {
@@ -97,6 +102,7 @@ interface IInternalMonacoEditorWebpackPluginOpts {
   features: IFeatureDefinition[];
   filename: string;
   publicPath: string;
+  workers: ILabeledWorkerDefinition[];
 }
 
 class MonacoEditorWebpackPlugin implements webpack.Plugin {
@@ -111,20 +117,20 @@ class MonacoEditorWebpackPlugin implements webpack.Plugin {
       features: coalesce(features.map(id => featuresById[id])),
       filename: options.filename || "[name].worker.js",
       publicPath: options.publicPath || '',
+      workers: options.workers || [],
     };
   }
 
   apply(compiler: webpack.Compiler): void {
-    const { languages, features, filename, publicPath } = this.options;
+    const { languages, features, filename, publicPath, workers } = this.options;
     const compilationPublicPath = getCompilationPublicPath(compiler);
     const modules = [EDITOR_MODULE].concat(languages).concat(features);
-    const workers: ILabeledWorkerDefinition[] = [];
     modules.forEach((module) => {
       if (module.worker) {
         workers.push({
           label: module.label,
           id: module.worker.id,
-          entry: module.worker.entry
+          entry: resolveMonacoPath(module.worker.entry),
         });
       }
     });
@@ -235,7 +241,7 @@ function createPlugins(workers: ILabeledWorkerDefinition[], filename: string): A
       .concat(workers.map(({ id, entry }) =>
         new AddWorkerEntryPointPlugin({
           id,
-          entry: resolveMonacoPath(entry),
+          entry,
           filename: getWorkerFilename(filename, entry),
           plugins: [
             new webpack.optimize.LimitChunkCountPlugin({ maxChunks: 1 }),
