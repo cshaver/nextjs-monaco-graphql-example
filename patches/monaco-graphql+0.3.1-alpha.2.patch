@@ -1,0 +1,33 @@
+diff --git a/node_modules/monaco-graphql/esm/graphqlMode.js b/node_modules/monaco-graphql/esm/graphqlMode.js
+index 55a3585..9b0d75f 100644
+--- a/node_modules/monaco-graphql/esm/graphqlMode.js
++++ b/node_modules/monaco-graphql/esm/graphqlMode.js
+@@ -23,6 +23,7 @@ define(["require", "exports", "./workerManager", "monaco-editor/esm/vs/basic-lan
+     exports.richLanguageConfig = exports.setupMode = void 0;
+     languageFeatures = __importStar(languageFeatures);
+     function setupMode(defaults) {
++        console.log('setupMode', defaults)
+         const disposables = [];
+         const providers = [];
+         const client = new workerManager_1.WorkerManager(defaults);
+@@ -111,7 +112,6 @@ define(["require", "exports", "./workerManager", "monaco-editor/esm/vs/basic-lan
+             { open: '{', close: '}' },
+             { open: '[', close: ']' },
+             { open: '(', close: ')' },
+-            { open: '"""', close: '"""' },
+             { open: '"', close: '"' },
+         ],
+         folding: {
+diff --git a/node_modules/monaco-graphql/src/graphqlMode.ts b/node_modules/monaco-graphql/src/graphqlMode.ts
+index 8416948..3e37cf1 100644
+--- a/node_modules/monaco-graphql/src/graphqlMode.ts
++++ b/node_modules/monaco-graphql/src/graphqlMode.ts
+@@ -135,7 +135,7 @@ export const richLanguageConfig: IRichLanguageConfiguration = {
+     { open: '{', close: '}' },
+     { open: '[', close: ']' },
+     { open: '(', close: ')' },
+-    { open: '"""', close: '"""' },
++    // { open: '"""', close: '"""' },
+     { open: '"', close: '"' },
+   ],
+   folding: {
