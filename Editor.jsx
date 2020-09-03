@@ -2,9 +2,18 @@ import MonacoEditor from 'react-monaco-editor';
 
 import 'monaco-graphql/esm/monaco.contribution';
 
+import {
+  buildClientSchema,
+  printSchema,
+} from 'graphql';
 import { api as GraphQLAPI } from 'monaco-graphql';
 
 import sample from './code-sample'
+import { GITHUB } from './largeSchema'
+
+const introspection = GITHUB
+const graphqlSchemaObj = buildClientSchema(introspection.data);
+const sdlString = printSchema(graphqlSchemaObj);
 
 const SCHEMA_URL = 'https://api.spacex.land/graphql/';
 
@@ -20,7 +29,21 @@ GraphQLAPI.setFormattingOptions({
   },
 });
 
-GraphQLAPI.setSchemaConfig({ uri: SCHEMA_URL });
+GraphQLAPI.setSchema(sdlString).then(() => {
+  console.log(introspection);
+  console.log(sdlString);
+
+  window.GraphQLAPI = GraphQLAPI
+  window.sdlString = sdlString
+
+  console.log('🕷 parsing...')
+  GraphQLAPI.parse(sdlString).then((document) => {
+    console.log('✅ parsed!')
+    console.log(document)
+  });
+});
+
+// GraphQLAPI.setSchemaConfig({ uri: SCHEMA_URL });
 
 export default function Editor() {
   return (
@@ -29,7 +52,7 @@ export default function Editor() {
       language="graphqlDev"
       theme="vs-dark"
       value={sample}
-      onChange={console.log}
+      onChange={() => {}}
       editorDidMount={(editor) => {
         console.log(editor)
       }}
